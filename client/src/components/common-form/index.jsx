@@ -1,69 +1,83 @@
-//import { FormControl, FormLabel } from 'radix-ui/form';
-import {Form, FormField, FormItem,FormControl} from '../ui/form';
-import { Input } from '../ui/input';
-import { Select, SelectContent, SelectTrigger } from '../ui/select';
-import CommonButton from '../commonbutton';
+import CommonButton from "../common-button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
-//https://www.youtube.com/watch?v=dz458ZkBMak&t=32051s
-
-
-const CommonForm = ({formControls=[], handleSubmit, form, buttonText}) => {
+function CommonForm({ formControls = [], handleSubmit, form, buttonText }) {
   return (
-        <Form {...form}>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full">
-                {
-                    formControls.length>0?
-                        formControls.map((item,index)=>(
-                         <FormField 
-                            control={form.control}
-                            name={item.id}
-                            render={({field})=>{
-                                return (
-                                <FormItem key={index} className="flex flex-col gap-2">
-                                   <label className="justify-start items-start text-left text-[14px] font-semibold text-gray-700">{item.label}</label>
-                                    {item.componentType==='input'?
-                                      <FormControl >
-                                        <Input placeholder={item.placeholder} type={item.type}  
-                                                {...field}
-                                                className="w-full rounded-lg h-[50px] border-none text-black 
-                                                bg-gray-200 text-[14px] drop-shadow-sm outline-none transiton-all duration-300
-                                                 focus:ring-2 focus:ring-blue-500 focus:drop-shadow-lg
-                                                  focus-visible:ring-offset-0"/>
-                                       </FormControl>
-                                    : item.componentType==='select'?
-                                      <Select>
-                                        <FormControl>
-                                            <SelectTrigger className="w-full rounded-xl h-[50px] border-none text-black 
-                                                bg-gray-200 text-[14px] drop-shadow-sm outline-none transiton-all duration-300
-                                                 focus:ring-2 focus:ring-blue-500 focus:drop-shadow-lg focus-visible:ring-offset-0">
-                                                Select an option
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent className="bg-white ">
-                                            {
-                                                item.options.map((option, index)=>(
-                                                    <SelectItem className="cursor-pointer text-black" 
-                                                    key={index} value={option.value}>{option.label}</SelectItem>
-                                                ))
-                                            }
-                                        </SelectContent>
-                                      </Select>
-                                      :null
-                                    }  
-                                </FormItem>
-                                )
-                            }}
-                            />
-                        ))
-                   : null
-                }
-                <div className="flex justify-center mt-4">
-                    <CommonButton onClick={handleSubmit} type={'submit'} buttonText={buttonText||'Submit'} />
-
-                </div>
-            </form>
-        </Form>
-    )
+    <Form {...form} className="w-full ">
+      <form onSubmit={form.handleSubmit(handleSubmit)} >
+        {formControls?.length > 0
+          ? formControls.map((controlItem,index) => (
+              <FormField key={index}
+                control={form.control}
+                name={controlItem.id}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-black font-semibold mb-1 mt-2">
+                        {controlItem.label}
+                      </FormLabel>
+                      {controlItem.componentType === "input" ? (
+                        <FormControl>
+                          <Input
+                            placeholder={controlItem.placeholder}
+                            type={controlItem.type}
+                            {...field}
+                            value={field.value} 
+                            autoComplete="false"
+                            className="w-full rounded h-[42px] border-none text-black bg-gray-200 text-[16px] outline-none drop-shadow-sm transition-all
+                             duration-300 ease-in-out focus:bg-gray-100 focus:drop-shadow-lg focus-visible:outline-none focus-visible:ring-0
+                              focus-visible:ring-offset-0 mb-3 "
+                          />
+                        </FormControl>
+                      ) : controlItem.componentType === "select" ? (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full rounded h-[50px] border-none text-black bg-gray-200 text-[16px] outline-none drop-shadow-sm transition-all duration-300 ease-in-out focus:bg-gray-100 focus:drop-shadow-lg focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
+                              {field.value ? (
+                                <SelectValue
+                                  className="text-black focus:text-black"
+                                  placeholder={controlItem.placeholder}
+                                />
+                              ) : (
+                                "Select"
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-white">
+                            {controlItem.options.map((optionItem) => (
+                              <SelectItem
+                                value={optionItem.id}
+                                className="text-black cursor-pointer focus:text-black"
+                              >
+                                {optionItem.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : null}
+                    </FormItem>
+                  );
+                }}
+              />
+            ))
+          : null}
+        <div className="flex justify-center mt-4 items-center">
+          <CommonButton type={"submit"} buttonText={buttonText} />
+        </div>
+      </form>
+    </Form>
+  );
 }
 
-export default CommonForm
+export default CommonForm;

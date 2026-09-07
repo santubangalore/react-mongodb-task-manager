@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Toast as ToastPrimitive } from "@base-ui/react/toast"
+import { cn } from "cn"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon, CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
@@ -10,13 +10,13 @@ const toast = ToastPrimitive.createToastManager()
 function ToastProvider({
   ...props
 }) {
-  return <ToastPrimitive.Provider {...props} />;
+  return <ToastPrimitive.Provider {...props} />
 }
 
 function ToastPortal({
   ...props
 }) {
-  return <ToastPrimitive.Portal data-slot="toast-portal" {...props} />;
+  return <ToastPrimitive.Portal data-slot="toast-portal" {...props} />
 }
 
 function ToastViewport({
@@ -30,8 +30,9 @@ function ToastViewport({
         "pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:mx-0 sm:w-full",
         className
       )}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function Toast({
@@ -59,8 +60,9 @@ function Toast({
         "data-expanded:data-ending-style:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]",
         className
       )}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function ToastContent({
@@ -74,8 +76,9 @@ function ToastContent({
         "flex h-full items-center gap-3 overflow-hidden p-4 transition-opacity duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] data-behind:opacity-0 data-expanded:opacity-100",
         className
       )}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function ToastTitle({
@@ -86,8 +89,9 @@ function ToastTitle({
     <ToastPrimitive.Title
       data-slot="toast-title"
       className={cn("text-sm font-medium", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function ToastDescription({
@@ -98,8 +102,9 @@ function ToastDescription({
     <ToastPrimitive.Description
       data-slot="toast-description"
       className={cn("text-sm text-muted-foreground", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function ToastAction({
@@ -112,8 +117,9 @@ function ToastAction({
       data-slot="toast-action"
       render={render}
       className={cn("shrink-0", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 function ToastClose({
@@ -131,12 +137,13 @@ function ToastClose({
         "relative shrink-0 text-muted-foreground after:absolute after:-inset-2 after:content-[''] hover:text-foreground",
         className
       )}
-      {...props}>
+      {...props}
+    >
       {children ?? (
         <XIcon aria-hidden="true" />
       )}
     </ToastPrimitive.Close>
-  );
+  )
 }
 
 function ToastIcon({
@@ -181,10 +188,11 @@ function ToastIcon({
   return (
     <span
       data-slot="toast-icon"
-      className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4">
+      className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+    >
       {icon}
     </span>
-  );
+  )
 }
 
 function ToastList() {
@@ -202,7 +210,7 @@ function ToastList() {
         <ToastClose />
       </ToastContent>
     </Toast>
-  ));
+  ))
 }
 
 function Toaster({
@@ -219,7 +227,7 @@ function Toaster({
         </ToastViewport>
       </ToastPortal>
     </ToastProvider>
-  );
+  )
 }
 
 const createToastManager = ToastPrimitive.createToastManager

@@ -5,49 +5,123 @@ const jwt = require('jsonwebtoken');
 
 //import { User } from '../models/user.js';
 const registerSchema = Joi.object({
-    name: Joi.string().min(3).max(30).required(),
-    email: Joi.string().email().max(30).required(),
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(6).max(20).required()
 });
 
-const registerUser= async (req, res, next) => {
-  
-        const { name, email, password } =await req.body;
-        
-        const {error} = registerSchema.validate({ name, email, password });
+const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(20).required()
+});
 
-        if (error) {
-            return res.status(400).json({success:false, message: error.details[0].message });
-        }
+const registerUser = async (req, res, next) => {
+  const { name, email, password } = await req.body;
+  const { error } = registerSchema.validate({ name, email, password });
+
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+
   try {
-        const isUserExist = await User.findOne({ email });
-        if (isUserExist) {
-            return res.status(400).json({ success: false, message: 'User already exists' });
-        }
-        else{
-            const hashedPassword= await bcrypt.hash(password, 12);
-            const newUser =  User.create({ name, email, password: hashedPassword });
-            if(!newUser){
-                const token = generateToken(newUser._id);
+    const isUserEmailAlreadyExists = await User.findOne({ email });
 
-                res.cookie('token', token, {
-                    withCredentials: true,
-                    httpOnly: false,
-                });
+    if (isUserEmailAlreadyExists) {
+      return res.status(400).json({
+        success: false,
+        message: "User email already exists! Please try with different email",
+      });
+    } else {
+      const hashPassword = await bcrypt.hash(password, 12);
 
-                res.status(201).json({ success: true, message: 'User registered successfully', userData:{
-                    name: newUser.name,
-                    email: newUser.email,
-                } });
-            }
-        }
-        //res.status(201).json({ success: true, message: 'User registered successfully' });
-        await next();
-    }catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+      const newlyCreatedUser = await User.create({
+        name,
+        email,
+        password: hashPassword,
+      });
+
+      if (newlyCreatedUser) {
+        const token = generateToken(newlyCreatedUser?._id);
+
+        res.cookie("token", token, {
+          withCredentials: true,
+          httpOnly: false,
+        });
+
+        res.status(201).json({
+          success: true,
+          message: "User registration successful",
+          userData: {
+            name: newlyCreatedUser.name,
+            email: newlyCreatedUser.email,
+            _id: newlyCreatedUser._id,
+          },
+        });
+
+        next();
+      }
     }
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong! Please try again",
+    });
+  }
+};
+
+const loginUser = async (req, res,next) => {
+  const { email, password } = req.body;
+  const { error } = loginSchema.validate({ email, password });
+
+  if (error) {
+    return res.json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+  
+  try{
+    const findUser = await User.findOne({ email });
+    if (!findUser) {
+      return res.json({
+        success: false,
+        message: "Invalid email ",
+      });
+    }
+    const isPasswordMatch = await bcrypt.compare(password, findUser.password);
+    if (!isPasswordMatch) {
+      return res.json({
+        success: false,
+        message: "Invalid  password",
+      });
+    }
+
+    const token = generateToken(findUser?._id);
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User login successful",
+    });
+    next();
+  } catch (error) 
+  {
+    console.log(error);
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
 }
+
 
 const  generateToken = (userId) => {
     const secretKey = process.env.JWT_SECRET || 'your_secret_key'; // Replace with your own secret key
@@ -56,6 +130,4 @@ const  generateToken = (userId) => {
 }
 
 
-module.exports = {
-    registerUser
-};
+module.exports = { registerUser, loginUser};
