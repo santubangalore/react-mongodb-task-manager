@@ -13,10 +13,10 @@ const userAuthVerification=async (req,res,next)=>{
     try{
         const secretKey = process.env.JWT_SECRET || 'your_secret_key'; // Replace with your own secret key
         const decoded= jwt.verify(token,secretKey);
-        console.log('Decoded Token:',decoded);
+       // console.log('Decoded Token:',decoded);
 
         const userInfo=await User.findById(decoded.userId);
-        console.log('User Info:',userInfo);
+       // console.log('User Info:',userInfo);
         if(userInfo){
             return res.status(200).json({
                 success:true,

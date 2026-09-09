@@ -129,5 +129,13 @@ const  generateToken = (userId) => {
     return token;
 }
 
+const logoutUser = (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+};
 
-module.exports = { registerUser, loginUser};
+
+module.exports = { registerUser, loginUser, logoutUser};

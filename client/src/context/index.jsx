@@ -19,14 +19,14 @@ function TaskManagerProvider({ children }) {
           setUser(data?.userInfo);
           console.log('User Auth Data:',data);
         }
-        return data?.success? navigate('/tasks/list'): navigate('/auth');    
+        return data?.success? (location.pathname==='auth' || location.pathname==='/') ? navigate('/tasks/list'): navigate(`${location.pathname}`) : navigate('/auth');    
       }
 
       verifyUserCookie();
     }, [navigate, loc.pathname]);
 
     return (
-    <TaskManagerContext.Provider >
+    <TaskManagerContext.Provider value={{user, setUser}}>
       {children}
     </TaskManagerContext.Provider>
   );
