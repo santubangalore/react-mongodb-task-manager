@@ -1,11 +1,14 @@
 
-import React from 'react'
+import CommonButton from '@/components/common-button'
+import React, { Fragment } from 'react'
 
 function ScrumBoardPage() {
+
   return (
-    <div>
-      <h2>Scrum board</h2>
-    </div>
+
+   <div>
+    <h1>Scrum board</h1>
+   </div>
   )
 }
 

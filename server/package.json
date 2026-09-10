@@ -4,8 +4,8 @@
   "description": "server for taskmanager",
   "license": "ISC",
   "author": "santu ghosh",
-  "type": "commonjs",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "test",
     "start": "node index.js",

@@ -39,3 +39,26 @@ export const callLogoutUserApi=async () => {
   console.log('User Logout API Response:', response?.data);
   return response?.data;
 }
+
+
+export const addNewTaskApi = async(formData)=>{
+  const response = await axios.post(
+      `${import.meta.env.VITE_SERVER_URL}/api/task/add-new-task`,formData,
+      { withCredentials: true }
+  );
+
+  return response?.data;
+}
+
+export const getAllTaskApi = async(userId)=>{
+  
+  
+}
+
+export const updateTaskApi = async(formData)=>{
+  
+}
+
+export const daleteTaskApi = async(taskId)=>{
+  
+}

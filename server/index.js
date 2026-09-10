@@ -5,7 +5,7 @@ const cors=require("cors");
 const cookieParser=require("cookie-parser");
 
 const userRouter = require( './routes/user-route.js');
-
+const taskRouter = require( './routes/task-routes.js');
 //https://www.youtube.com/watch?v=dz458ZkBMak&t=32056s
 
 
@@ -19,6 +19,8 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 app.use('/api/user', userRouter);
+app.use('/api/task', taskRouter);
+
 
 const port =process.env.PORT|| 5000;
 

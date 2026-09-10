@@ -1,17 +1,31 @@
 const Task = require("../models/task");
-
+const Joi = require('joi');
 //add a new task
 //get all tasks by userid
 //delete a task
 //edit a task
-
+const taskSchema = Joi.object({
+    title: Joi.string().required(),
+    description: Joi.string().required(),
+    status:Joi.string().required(),
+    userId:Joi.string().required(),
+    priority: Joi.string().required()
+});
 const addNewTask = async (req, res) => {
   const { title, description, status, userId, priority } = await req.body;
 
   //validate the schema
+   const { error } = taskSchema.validate({ title, description, status, userId, priority });
 
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+  
   try {
-    const newlyCreatedTask = await Task.create({
+    const newTask = await Task.create({
       title,
       description,
       status,
@@ -19,7 +33,8 @@ const addNewTask = async (req, res) => {
       priority,
     });
 
-    if (newlyCreatedTask) {
+
+    if (newTask) {
       return res.status(200).json({
         success: true,
         message: "Task added successfully",

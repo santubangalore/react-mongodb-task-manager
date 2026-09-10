@@ -1,7 +1,7 @@
 import {createContext,useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { callUserAuthApi } from '@/services';
-
+import { useForm } from 'react-hook-form';
 
 export const TaskManagerContext = createContext({});
 
@@ -10,8 +10,17 @@ function TaskManagerProvider({ children }) {
   
     const navigate=useNavigate();
     const loc=useLocation();
+    const taskFormData= useForm({
+    defaultValues:{
+    title:'',
+    description:'',
+    status:'',
+    userId:'',
+    priority:''    
+    }
+  });
 
-    useEffect(() => {
+   useEffect(() => {
 
       const verifyUserCookie=async () => {
         const data= await callUserAuthApi();
@@ -26,7 +35,7 @@ function TaskManagerProvider({ children }) {
     }, [navigate, loc.pathname]);
 
     return (
-    <TaskManagerContext.Provider value={{user, setUser}}>
+    <TaskManagerContext.Provider value={{user, setUser,taskFormData}}>
       {children}
     </TaskManagerContext.Provider>
   );
