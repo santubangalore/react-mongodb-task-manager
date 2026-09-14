@@ -51,7 +51,11 @@ export const addNewTaskApi = async(formData)=>{
 }
 
 export const getAllTaskApi = async(userId)=>{
-  
+  const response=await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/api/task/get-all-task-by-userId/${userId}`
+
+  )
+  return response.data;
   
 }
 

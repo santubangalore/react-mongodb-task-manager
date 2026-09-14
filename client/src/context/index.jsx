@@ -7,7 +7,9 @@ export const TaskManagerContext = createContext({});
 
 function TaskManagerProvider({ children }) {
     const [user, setUser] = useState(null);
-  
+    const [loading, setLoading]= useState(false);
+    const [taskList,setTaskList]= useState([]);
+
     const navigate=useNavigate();
     const loc=useLocation();
     const taskFormData= useForm({
@@ -35,7 +37,7 @@ function TaskManagerProvider({ children }) {
     }, [navigate, loc.pathname]);
 
     return (
-    <TaskManagerContext.Provider value={{user, setUser,taskFormData}}>
+    <TaskManagerContext.Provider value={{user, setUser,taskFormData,setTaskList,taskList, loading,setLoading}}>
       {children}
     </TaskManagerContext.Provider>
   );

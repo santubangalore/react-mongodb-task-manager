@@ -57,6 +57,7 @@ const addNewTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   const { id } = req.params;
+  console.log("user ID:",id);
 
   try {
     const extractAllTasksByUserId = await Task.find({ userId: id });

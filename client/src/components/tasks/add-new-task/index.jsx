@@ -1,19 +1,14 @@
 
 import CommonDialog from '@/components/common-dialog'
-import React, { useContext } from 'react'
 import {addNewTaskFormControls} from '@/config';
-import { useForm } from 'react-hook-form';
-import {TaskManagerContext} from '@/context';
 
 
 
 
-const AddNewTask = ({showDialog,setShowDialog}) => {
+const AddNewTask = ({showDialog, setShowDialog, handleSubmit,taskFormData}) => {
    // const [showDialog,setShowDialog]=useState(false);
-   const {taskFormData} = useContext(TaskManagerContext)
-    const handleSubmit=()=>{
+   
 
-    }
 
   return (
     <CommonDialog 

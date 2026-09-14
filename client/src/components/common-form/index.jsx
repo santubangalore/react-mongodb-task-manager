@@ -32,8 +32,8 @@ function CommonForm({ formControls = [], handleSubmit, form, buttonText }) {
                             {...field}
                             value={field.value} 
                             autoComplete="false"
-                            className="w-120 rounded h-[42px] border-1 text-black bg-slate-200 text-[16px] outline-none drop-shadow-sm transition-all
-                             duration-300 ease-in-out focus:bg-sale-100 focus:drop-shadow-lg focus-visible:outline-blue focus-visible:ring-0
+                            className="w-full rounded h-[42px] border-1 text-black bg-slate-200 text-[16px] outline-none drop-shadow-sm transition-all
+                             duration-300 ease-in-out focus:bg-slate-100 focus:drop-shadow-lg focus-visible:outline-blue focus-visible:ring-0
                               focus-visible:ring-offset-0 mb-3 "
                           />
                         </FormControl>
@@ -43,12 +43,12 @@ function CommonForm({ formControls = [], handleSubmit, form, buttonText }) {
                           onValueChange={field.onChange}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-120 rounded h-[50px] border-1 text-black bg-slate-200 text-[16px] 
+                            <SelectTrigger className="w-full rounded h-[50px] border-1 text-black bg-slate-200 text-[16px] 
                             outline-none drop-shadow-sm transition-all duration-300 ease-in-out focus:bg-gray-100 focus:drop-shadow-lg focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
                               {field.value ? (
                                 <SelectValue
                                   className="text-black focus:text-black  h-[50px]"
-                                  placeholder={controlItem.placeholder}
+                                  placeholder={controlItem.placeholder} 
                                 />
                               ) : (
                                 "Select"
