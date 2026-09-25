@@ -57,7 +57,7 @@ const addNewTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   const { id } = req.params;
-  console.log("user ID:",id);
+ // console.log("user ID:",id);
 
   try {
     const extractAllTasksByUserId = await Task.find({ userId: id });
@@ -123,17 +123,17 @@ const updateTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
-  const { id } = req.params;
-
+  const  { Id }  = req.params;
+  //console.log('deleteTask in controller:',req.params);
   try {
-    if (!id) {
+    if (!Id) {
       return res.status(400).json({
         success: false,
         message: "Task id is required",
       });
     }
 
-    const deleteTask = await Task.findByIdAndDelete(id);
+    const deleteTask = await Task.findByIdAndDelete(Id);
 
     if (deleteTask) {
       return res.status(200).json({

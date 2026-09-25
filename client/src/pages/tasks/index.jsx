@@ -3,14 +3,15 @@ import {useContext, useEffect, useState} from 'react'
 import CommonButton from '../../components/common-button';
 import AddNewTask from '@/components/tasks/add-new-task';
 import {TaskManagerContext} from '@/context';
-import {addNewTaskApi, getAllTaskApi } from '@/services';
+import {addNewTaskApi,daleteTaskApi, getAllTaskApi } from '@/services';
 import { Skeleton } from '@/components/ui/skeleton';
 import CommonCard from '@/components/common-card';
 import TaskItem from '@/components/tasks/task-item';
 
 function TasksPage() {
   const [showDialog, setShowDialog]=useState(false);
-   const {taskList,setTaskList,loading, setLoading,user,taskFormData} = useContext(TaskManagerContext)
+   const {taskList,setTaskList,loading, setLoading,user,taskFormData,
+    currentEditedId,setCurrentEditedId} = useContext(TaskManagerContext)
  
    const handleSubmit=async (getData)=>{
         setLoading(true)
@@ -24,6 +25,15 @@ function TasksPage() {
           taskFormData.reset();
         }
     }
+
+   async function handleDelete(taskId){
+     // console.log('taskid:',taskId);
+     const result=await daleteTaskApi(taskId);
+     console.log(result);
+     if(result.success){
+      fetchListOfTasks()
+     }
+   }
 
    async function fetchListOfTasks(){
       setLoading(true);
@@ -51,12 +61,13 @@ function TasksPage() {
           {
             taskList.length>0?
              taskList.map(taskItem=>(
-             <TaskItem item={taskItem} />
-
-            
+             <TaskItem item={taskItem}
+              setShowDialog={setShowDialog}
+              taskFormData={taskFormData}
+              setCurrentEditedId={setCurrentEditedId}
+              handleDelete={handleDelete}/>
              ))
             :<h2>No Task added!</h2>
-
           }
         </div>
         <AddNewTask 
@@ -64,6 +75,8 @@ function TasksPage() {
           setShowDialog={setShowDialog}
           handleSubmit={handleSubmit}
           taskFormData={taskFormData}
+          currentEditedId={currentEditedId}
+          setCurrentEditedId={setCurrentEditedId}
         />
         <div>
 

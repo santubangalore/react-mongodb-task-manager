@@ -9,6 +9,7 @@ function TaskManagerProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading]= useState(false);
     const [taskList,setTaskList]= useState([]);
+    const [currentEditedId,setCurrentEditedId]=useState(null);
 
     const navigate=useNavigate();
     const loc=useLocation();
@@ -37,7 +38,11 @@ function TaskManagerProvider({ children }) {
     }, [navigate, loc.pathname]);
 
     return (
-    <TaskManagerContext.Provider value={{user, setUser,taskFormData,setTaskList,taskList, loading,setLoading}}>
+    <TaskManagerContext.Provider value={{user, setUser,
+      taskFormData,setTaskList,
+      taskList, loading,
+      setLoading,currentEditedId,
+      setCurrentEditedId}}>
       {children}
     </TaskManagerContext.Provider>
   );

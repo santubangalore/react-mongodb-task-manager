@@ -55,14 +55,22 @@ export const getAllTaskApi = async(userId)=>{
       `${import.meta.env.VITE_SERVER_URL}/api/task/get-all-task-by-userId/${userId}`
 
   )
-  return response.data;
+  return response?.data;
   
 }
 
 export const updateTaskApi = async(formData)=>{
-  
-}
+  const response=await axios.put(
+      `${import.meta.env.VITE_SERVER_URL}/api/task/update-task`, formData )
+
+    return response?.data;
+  }
 
 export const daleteTaskApi = async(taskId)=>{
   
+     const response=await axios.delete(
+      `${import.meta.env.VITE_SERVER_URL}/api/task/delete-task/${taskId}` )
+
+    return response?.data;
+    
 }
