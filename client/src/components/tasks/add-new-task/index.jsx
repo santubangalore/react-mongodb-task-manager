@@ -5,17 +5,19 @@ import {addNewTaskFormControls} from '@/config';
 
 
 
-const AddNewTask = ({showDialog, setShowDialog, handleSubmit,taskFormData}) => {
-   // const [showDialog,setShowDialog]=useState(false);
-   
+const AddNewTask = ({showDialog, setShowDialog, handleSubmit,taskFormData,currentEditedId,setCurrentEditedId}) => {
 
-
+  console.log('cuurentEditedId:',currentEditedId)
+  const title=(currentEditedId===null)?"Add new":"Edit Task";
   return (
     <CommonDialog 
         showDialog={showDialog}
-        setShowDialog={setShowDialog}
+        onOpenChange={()=>{setShowDialog(false);
+          currentEditedId?taskFormData.reset():null;
+          setCurrentEditedId(null)
+        }}
         btnText={'Add'}
-        title="Add new Task"
+        title={title}
         formControls={addNewTaskFormControls}
         handleSubmit={handleSubmit}
         formData={taskFormData}
