@@ -10,6 +10,7 @@ import TaskItem from '@/components/tasks/task-item';
 
 function TasksPage() {
   const [showDialog, setShowDialog]=useState(false);
+
    const {taskList,setTaskList,loading, setLoading,user,taskFormData,
     currentEditedId,setCurrentEditedId} = useContext(TaskManagerContext)
  
@@ -32,8 +33,7 @@ function TasksPage() {
           setCurrentEditedId(null);
         }
     }
-
-   async function handleDelete(taskId){
+ async function handleDelete(taskId){
      // console.log('taskid:',taskId);
      const result=await daleteTaskApi(taskId);
      console.log(result);
