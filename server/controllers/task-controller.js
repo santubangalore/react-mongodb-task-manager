@@ -1,21 +1,26 @@
 const Task = require("../models/task");
-const Joi = require('joi');
-//add a new task
-//get all tasks by userid
-//delete a task
-//edit a task
-const taskSchema = Joi.object({
-    title: Joi.string().required(),
-    description: Joi.string().required(),
-    status:Joi.string().required(),
-    userId:Joi.string().required(),
-    priority: Joi.string().required()
-});
-const addNewTask = async (req, res) => {
-  const { title, description, status, userId, priority } = await req.body;
+const Joi = require("joi");
 
-  //validate the schema
-   const { error } = taskSchema.validate({ title, description, status, userId, priority });
+const taskSchema = Joi.object({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  status: Joi.string().required(),
+  userId: Joi.string().required(),
+  priority: Joi.string().required(),
+  projectId: Joi.string().allow("").optional(),
+});
+
+const addNewTask = async (req, res) => {
+  const { title, description, status, userId, priority, projectId } = req.body;
+
+  const { error } = taskSchema.validate({
+    title,
+    description,
+    status,
+    userId,
+    priority,
+    projectId,
+  });
 
   if (error) {
     return res.status(400).json({
@@ -23,7 +28,7 @@ const addNewTask = async (req, res) => {
       message: error.details[0].message,
     });
   }
-  
+
   try {
     const newTask = await Task.create({
       title,
@@ -31,100 +36,113 @@ const addNewTask = async (req, res) => {
       status,
       userId,
       priority,
+      projectId: projectId || "",
     });
-
 
     if (newTask) {
       return res.status(200).json({
         success: true,
         message: "Task added successfully",
+        task: newTask,
       });
     } else {
       return res.status(400).json({
         success: false,
-        message: "Some error occured! Please try again",
+        message: "Some error occurred! Please try again",
       });
     }
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Some error occured! Please try again",
+      message: "Some error occurred! Please try again",
     });
   }
 };
 
 const getAllTasks = async (req, res) => {
   const { id } = req.params;
- // console.log("user ID:",id);
+  const { projectId } = req.query;
 
   try {
-    const extractAllTasksByUserId = await Task.find({ userId: id });
-
-    if (extractAllTasksByUserId) {
-      return res.status(200).json({
-        success: true,
-        tasksList: extractAllTasksByUserId,
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Some error occured! Please try again",
-      });
+    const query = { userId: id };
+    if (projectId) {
+      query.projectId = projectId;
     }
-  } catch (error) {
-    console.log(error);
 
+    const extractAllTasks = await Task.find(query);
+
+    return res.status(200).json({
+      success: true,
+      tasksList: extractAllTasks,
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Some error occured! Please try again",
+      message: "Some error occurred! Please try again",
+    });
+  }
+};
+
+const getTasksByProjectId = async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const extractTasks = await Task.find({ projectId });
+    return res.status(200).json({
+      success: true,
+      tasksList: extractTasks,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Some error occurred! Please try again",
     });
   }
 };
 
 const updateTask = async (req, res) => {
-  const { title, description, status, priority, userId, _id } = await req.body;
+  const { title, description, status, priority, userId, _id, projectId } = req.body;
 
   try {
-    const updateTask = await Task.findByIdAndUpdate(
-      {
-        _id,
-      },
+    const updatedTask = await Task.findByIdAndUpdate(
+      _id,
       {
         title,
         description,
         status,
         priority,
         userId,
+        projectId: projectId || "",
       },
       { new: true }
     );
 
-    if (updateTask) {
+    if (updatedTask) {
       return res.status(200).json({
         success: true,
         message: "Task updated successfully",
+        task: updatedTask,
       });
     } else {
       return res.status(400).json({
         success: false,
-        message: "Some error occured! Please try again",
+        message: "Some error occurred! Please try again",
       });
     }
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Some error occured! Please try again",
+      message: "Some error occurred! Please try again",
     });
   }
 };
 
 const deleteTask = async (req, res) => {
-  const  { Id }  = req.params;
-  //console.log('deleteTask in controller:',req.params);
+  const { Id } = req.params;
   try {
     if (!Id) {
       return res.status(400).json({
@@ -133,9 +151,9 @@ const deleteTask = async (req, res) => {
       });
     }
 
-    const deleteTask = await Task.findByIdAndDelete(Id);
+    const deletedTask = await Task.findByIdAndDelete(Id);
 
-    if (deleteTask) {
+    if (deletedTask) {
       return res.status(200).json({
         success: true,
         message: "Task deleted successfully",
@@ -143,18 +161,16 @@ const deleteTask = async (req, res) => {
     } else {
       return res.status(400).json({
         success: false,
-        message: "Some error occured! Please try again",
+        message: "Some error occurred! Please try again",
       });
     }
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Some error occured! Please try again",
+      message: "Some error occurred! Please try again",
     });
   }
 };
 
-module.exports = { addNewTask, getAllTasks, deleteTask, updateTask };
-
+module.exports = { addNewTask, getAllTasks, getTasksByProjectId, deleteTask, updateTask };

@@ -6,7 +6,8 @@ const TaskSchema = new mongoose.Schema({
   status: String,
   userId: String,
   priority: String,
-});
+  projectId: String,
+}, { timestamps: true });
 
 const Task = mongoose.models.Task || mongoose.model("Task", TaskSchema);
 

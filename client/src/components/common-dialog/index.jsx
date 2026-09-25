@@ -7,7 +7,7 @@ const CommonDialog = ({showDialog,onOpenChange,title,formControls,formData,btnTe
   console.log(title)
   return (
     <Dialog open={showDialog} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-screen h-[480px] w-[600px] overflow-hidden bg-blue-100 border border-2 border-blue-500">
+        <DialogContent className="sm:max-w-screen h-[680px] w-[600px] overflow-hidden bg-blue-100 border border-2 border-blue-500 overflow-y-scroll">
             <DialogTitle>{title}</DialogTitle>
             <div >
                 <CommonForm

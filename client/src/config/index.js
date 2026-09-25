@@ -39,6 +39,70 @@ export const SignInFormControls = [
   },
 ];
 
+export const projectStatusOptions = [
+  {
+    id: "Planned",
+    label: "Planned",
+  },
+  {
+    id: "In Progress",
+    label: "In Progress",
+  },
+  {
+    id: "On Hold",
+    label: "On Hold",
+  },
+  {
+    id: "Completed",
+    label: "Completed",
+  },
+];
+
+export const addNewProjectFormControls = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Enter project name",
+    label: "Project Name",
+    componentType: "input",
+  },
+  {
+    id: "description",
+    type: "text",
+    placeholder: "Enter project description",
+    label: "Description",
+    componentType: "input",
+  },
+  {
+    id: "client",
+    type: "text",
+    placeholder: "Enter client/company name",
+    label: "Client / Company",
+    componentType: "input",
+  },
+  {
+    id: "manager",
+    type: "text",
+    placeholder: "Enter project manager name",
+    label: "Project Manager",
+    componentType: "input",
+  },
+  {
+    id: "startDate",
+    type: "date",
+    placeholder: "Select start date",
+    label: "Start Date",
+    componentType: "input",
+  },
+  {
+    id: "status",
+    placeholder: "Select project status",
+    label: "Status",
+    componentType: "select",
+    options: projectStatusOptions,
+  },
+];
+
 export const scrumBoardOptions = [
   {
     id: "todo",
@@ -88,7 +152,6 @@ export const addNewTaskFormControls = [
     id: "priority",
     placeholder: "Enter priority",
     label: "Priority",
-    componentType: "input",
     componentType: "select",
     options: [
       {
