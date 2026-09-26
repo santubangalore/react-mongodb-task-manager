@@ -7,7 +7,7 @@ import ScrumBoardPage from './pages/scrum-board';
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-100 text-gray-900 font-sans">
+    <div className="min-h-screen bg-slate-50 text-gray-900 font-sans">
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
 
