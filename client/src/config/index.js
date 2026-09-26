@@ -40,22 +40,10 @@ export const SignInFormControls = [
 ];
 
 export const projectStatusOptions = [
-  {
-    id: "Planned",
-    label: "Planned",
-  },
-  {
-    id: "In Progress",
-    label: "In Progress",
-  },
-  {
-    id: "On Hold",
-    label: "On Hold",
-  },
-  {
-    id: "Completed",
-    label: "Completed",
-  },
+  { id: "Planned", label: "Planned" },
+  { id: "In Progress", label: "In Progress" },
+  { id: "On Hold", label: "On Hold" },
+  { id: "Completed", label: "Completed" },
 ];
 
 export const addNewProjectFormControls = [
@@ -104,28 +92,16 @@ export const addNewProjectFormControls = [
 ];
 
 export const scrumBoardOptions = [
-  {
-    id: "todo",
-    label: "To DO",
-  },
-  {
-    id: "inProgress",
-    label: "In Progress",
-  },
-  {
-    id: "blocked",
-    label: "Blocked",
-  },
-  {
-    id: "review",
-    label: "Review",
-  },
-  {
-    id: "done",
-    label: "Done",
-  },
+  { id: "todo", label: "To Do" },
+  { id: "inProgress", label: "In Progress" },
+  { id: "blocked", label: "Blocked" },
+  { id: "review", label: "Review" },
+  { id: "done", label: "Done" },
 ];
 
+// Task form controls — status field is intentionally omitted here.
+// Status is locked to "todo" on creation. It becomes editable only
+// inside a sprint (the sprint detail view provides its own inline controls).
 export const addNewTaskFormControls = [
   {
     id: "title",
@@ -142,30 +118,64 @@ export const addNewTaskFormControls = [
     componentType: "input",
   },
   {
-    id: "status",
-    placeholder: "Enter Status",
-    label: "Status",
-    componentType: "select",
-    options: scrumBoardOptions,
-  },
-  {
     id: "priority",
-    placeholder: "Enter priority",
+    placeholder: "Select priority",
     label: "Priority",
     componentType: "select",
     options: [
-      {
-        id: "low",
-        label: "Low",
-      },
-      {
-        id: "medium",
-        label: "Medium",
-      },
-      {
-        id: "high",
-        label: "High",
-      },
+      { id: "low", label: "Low" },
+      { id: "medium", label: "Medium" },
+      { id: "high", label: "High" },
     ],
+  },
+];
+
+// Story form controls — no dates, just title + description
+export const addNewStoryFormControls = [
+  {
+    id: "title",
+    type: "text",
+    placeholder: "Enter story title",
+    label: "Story Title",
+    componentType: "input",
+  },
+  {
+    id: "description",
+    type: "text",
+    placeholder: "Describe the user story",
+    label: "Description",
+    componentType: "input",
+  },
+];
+
+// Sprint form controls
+export const addNewSprintFormControls = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "e.g. Sprint 1",
+    label: "Sprint Name",
+    componentType: "input",
+  },
+  {
+    id: "goal",
+    type: "text",
+    placeholder: "What is the goal of this sprint?",
+    label: "Sprint Goal",
+    componentType: "input",
+  },
+  {
+    id: "startDate",
+    type: "date",
+    placeholder: "Start date",
+    label: "Start Date",
+    componentType: "input",
+  },
+  {
+    id: "endDate",
+    type: "date",
+    placeholder: "End date (default: 2 weeks after start)",
+    label: "End Date",
+    componentType: "input",
   },
 ];

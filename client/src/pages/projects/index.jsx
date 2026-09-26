@@ -45,7 +45,12 @@ function ProjectsPage() {
   };
 
   const handleSubmit = async (getData) => {
+    if (!user?._id) {
+      console.error('handleSubmit: user not loaded yet');
+      return;
+    }
     setLoading(true);
+
     try {
       const payload = {
         ...getData,

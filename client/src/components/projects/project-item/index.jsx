@@ -1,5 +1,4 @@
-import CommonButton from '@/components/common-button';
-import { Calendar, User, Building, ListCheck, Edit3, Trash2, ArrowRight } from 'lucide-react';
+import { Calendar, User, Building, ListCheck, Edit3, Trash2, ArrowRight, FolderOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const getStatusBadgeClass = (status) => {
@@ -52,6 +51,10 @@ const ProjectItem = ({
   const handleViewTasks = () => {
     setSelectedProjectId(item?._id);
     navigate('/tasks/list');
+  };
+
+  const handleViewProject = () => {
+    navigate(`/projects/${item?._id}`);
   };
 
   return (
@@ -113,12 +116,21 @@ const ProjectItem = ({
 
       {/* Footer Actions */}
       <div className="px-5 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2">
-        <button
-          onClick={handleViewTasks}
-          className="flex items-center gap-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg transition-colors shadow-xs"
-        >
-          View Tasks <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleViewProject}
+            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-2 rounded-lg transition-colors shadow-xs"
+          >
+            <FolderOpen className="w-3.5 h-3.5" />
+            Backlog
+          </button>
+          <button
+            onClick={handleViewTasks}
+            className="flex items-center gap-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg transition-colors shadow-xs"
+          >
+            View Tasks <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
         <div className="flex gap-2">
           <button

@@ -1,19 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
-import AddNewTask from '@/components/tasks/add-new-task';
+import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TaskManagerContext } from '@/context';
 import {
-  addNewTaskApi,
   daleteTaskApi,
   getAllProjectsApi,
   getAllTaskApi,
-  updateTaskApi,
 } from '@/services';
 import { Skeleton } from '@/components/ui/skeleton';
 import TaskItem from '@/components/tasks/task-item';
-import { Briefcase, Filter, Plus, ListTodo } from 'lucide-react';
+import { Briefcase, Filter, ListTodo, BookOpen, ArrowRight } from 'lucide-react';
 
 function TasksPage() {
-  const [showDialog, setShowDialog] = useState(false);
+  const navigate = useNavigate();
 
   const {
     taskList,
@@ -23,9 +21,6 @@ function TasksPage() {
     loading,
     setLoading,
     user,
-    taskFormData,
-    currentEditedId,
-    setCurrentEditedId,
     selectedProjectId,
     setSelectedProjectId,
   } = useContext(TaskManagerContext);
@@ -34,9 +29,7 @@ function TasksPage() {
     if (!user?._id) return;
     try {
       const result = await getAllProjectsApi(user._id);
-      if (result?.success) {
-        setProjectList(result.projectsList || []);
-      }
+      if (result?.success) setProjectList(result.projectsList || []);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
     }
@@ -50,40 +43,9 @@ function TasksPage() {
         user._id,
         selectedProjectId !== 'all' ? selectedProjectId : null
       );
-      if (result?.success) {
-        setTaskList(result.tasksList || []);
-      }
+      if (result?.success) setTaskList(result.tasksList || []);
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (getData) => {
-    setLoading(true);
-    try {
-      const payload = {
-        ...getData,
-        userId: user?._id,
-      };
-
-      const response =
-        currentEditedId !== null
-          ? await updateTaskApi({
-              ...payload,
-              _id: currentEditedId,
-            })
-          : await addNewTaskApi(payload);
-
-      if (response?.success) {
-        fetchListOfTasks();
-        taskFormData.reset();
-        setCurrentEditedId(null);
-        setShowDialog(false);
-      }
-    } catch (err) {
-      console.error('Failed to save task:', err);
     } finally {
       setLoading(false);
     }
@@ -93,9 +55,7 @@ function TasksPage() {
     if (!window.confirm('Are you sure you want to delete this task?')) return;
     try {
       const result = await daleteTaskApi(taskId);
-      if (result?.success) {
-        fetchListOfTasks();
-      }
+      if (result?.success) fetchListOfTasks();
     } catch (err) {
       console.error('Failed to delete task:', err);
     }
@@ -125,7 +85,7 @@ function TasksPage() {
 
   return (
     <div className="flex flex-col gap-6 pb-12">
-      {/* Top Header & Filter Bar */}
+      {/* Header & Filter Bar */}
       <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -140,7 +100,7 @@ function TasksPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          {/* Project Filter Selector */}
+          {/* Project Filter */}
           <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-xl border border-gray-200 text-sm">
             <Filter className="w-4 h-4 text-gray-500" />
             <span className="text-xs font-semibold text-gray-600">Filter Project:</span>
@@ -151,35 +111,40 @@ function TasksPage() {
             >
               <option value="all">All Projects</option>
               {projectList.map((p) => (
-                <option key={p._id} value={p._id}>
-                  {p.name}
-                </option>
+                <option key={p._id} value={p._id}>{p.name}</option>
               ))}
             </select>
           </div>
 
-          {/* Add New Task Button */}
-          <button
-            onClick={() => {
-              taskFormData.reset({
-                title: '',
-                description: '',
-                status: 'todo',
-                priority: 'medium',
-                projectId: selectedProjectId !== 'all' ? selectedProjectId : '',
-              });
-              setCurrentEditedId(null);
-              setShowDialog(true);
-            }}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-xs transition cursor-pointer text-sm"
-          >
-            <Plus className="w-4 h-4" />
-            Add New Task
-          </button>
+          {/* Link to project backlog for task creation */}
+          {selectedProjectId && selectedProjectId !== 'all' ? (
+            <button
+              onClick={() => navigate(`/projects/${selectedProjectId}`)}
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-xs transition text-sm"
+            >
+              <BookOpen className="w-4 h-4" />
+              Open Backlog to Add Tasks
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 bg-gray-100 text-gray-500 font-semibold px-4 py-2.5 rounded-xl text-xs">
+              <BookOpen className="w-4 h-4" />
+              Select a project to add tasks via its backlog
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Task List Grid */}
+      {/* Info banner — tasks are story-scoped */}
+      <div className="flex items-start gap-3 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl px-4 py-3 text-sm">
+        <BookOpen className="w-4 h-4 mt-0.5 shrink-0" />
+        <span>
+          Tasks must be created inside a <strong>story</strong> on the project backlog.
+          Open a project's backlog and click the <strong>+</strong> icon on any story to add tasks.
+        </span>
+      </div>
+
+      {/* Task List Grid — read-only; edit/delete only */}
       <div className="mt-2 flex flex-col">
         {taskList.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -187,11 +152,13 @@ function TasksPage() {
               <TaskItem
                 key={taskItem._id}
                 item={taskItem}
-                setShowDialog={setShowDialog}
-                taskFormData={taskFormData}
-                setCurrentEditedId={setCurrentEditedId}
+                // No edit handler — editing happens from the project backlog
+                setShowDialog={() => {}}
+                taskFormData={null}
+                setCurrentEditedId={() => {}}
                 handleDelete={handleDelete}
                 projectList={projectList}
+                readOnly
               />
             ))}
           </div>
@@ -201,21 +168,19 @@ function TasksPage() {
             <h3 className="text-lg font-semibold text-gray-700">No Tasks Found</h3>
             <p className="text-sm text-gray-500 max-w-sm">
               {selectedProjectId !== 'all'
-                ? 'There are no tasks assigned to this project yet.'
-                : 'You have not added any tasks yet.'}
+                ? 'No tasks in this project yet. Go to the project backlog to create stories and tasks.'
+                : 'No tasks yet. Open a project and create stories to start adding tasks.'}
             </p>
+            {selectedProjectId && selectedProjectId !== 'all' && (
+              <button
+                onClick={() => navigate(`/projects/${selectedProjectId}`)}
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl text-sm mt-1"
+              >
+                <BookOpen className="w-4 h-4" /> Go to Project Backlog
+              </button>
+            )}
           </div>
         )}
-
-        <AddNewTask
-          showDialog={showDialog}
-          setShowDialog={setShowDialog}
-          handleSubmit={handleSubmit}
-          taskFormData={taskFormData}
-          currentEditedId={currentEditedId}
-          setCurrentEditedId={setCurrentEditedId}
-          projectList={projectList}
-        />
       </div>
     </div>
   );

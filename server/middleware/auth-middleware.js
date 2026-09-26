@@ -20,7 +20,11 @@ const userAuthVerification=async (req,res,next)=>{
         if(userInfo){
             return res.status(200).json({
                 success:true,
-                userInfo
+                userInfo: {
+                    _id: userInfo._id,
+                    name: userInfo.name,
+                    email: userInfo.email,
+                }
             })
         }
          next();
